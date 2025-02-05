@@ -1,9 +1,12 @@
 const express = require("express")
+const path = require("path");
 //ENSURE CORS IS ACTIVE IN ORDER FOR HOSTING BACKEND AND FRONTEND ON THE SAME DEVICE & SCRIPTS FROM OUTSIDE SOURCES (EX. Index.html using the script.js files)
 var cors = require('cors')
 //activate or tell this app variable to be an express server
 const app = express()
 app.use(cors())
+app.use(express.static(path.join(__dirname, 'frontend')));
+
 const router = express.Router()
 
 
