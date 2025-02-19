@@ -1,63 +1,80 @@
-const express = require("express")
-const path = require("path");
-//ENSURE CORS IS ACTIVE IN ORDER FOR HOSTING BACKEND AND FRONTEND ON THE SAME DEVICE & SCRIPTS FROM OUTSIDE SOURCES (EX. Index.html using the script.js files)
-var cors = require('cors')
-//activate or tell this app variable to be an express server
-const app = express()
-app.use(cors())
-app.use(express.static(path.join(__dirname, 'frontend')));
-
+// Backend (Glitch) - server.js
+const path = require("path"); 
+const express = require('express');
+const app = express();
 const router = express.Router()
+const bodyParser = require('body-parser')
+const Song = require("./models/songs")
 
+app.use(bodyParser.json())
+app.use(express.json())
 
-//making an api using routes
-// Routes are used to handle browser requests.  The look like URLs.  The difference is that when a browser requests a route, it is dynamically handled by using a function.
+// Enable CORS for all routes
+/* var cors = require('cors') */
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*'); // Allow all origins
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
-router.get("/songs", function(req,res){
-    const songs = [
-        {
-            title: "We Found Love",
+// Your existing routes
+app.use("/api", router)
+
+//get songs from db - nef
+router.get("/songs", async(req,res) => {
+  let query = {}
+  if (req.query.genre){
+    query = {genre : req.query.genre}
+  }
+
+  //to find all songs in a db just use the find() method within the try/catch thats built into mongoose
+  try {
+    const songs = await Song.find(query); // This will return a promise
+    res.json(songs); // Send the result as a response
+  } catch (err) {
+    res.status(400).send(err); // Handle any errors
+  }
+  
+});
+
+router.post("/songs", async (req, res) =>{
+  try{
+    const song = await new Song(req, body)
+    await song.save()
+    res.stat
+    console.log(song)
+  }
+  catch{
+    res.status(400).send(err)
+  }
+})
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+})
+
+//Old code -NM
+
+/* Song.find(query, function(err, songs){
+    if (err){
+      res.status(400).send(err)
+    }
+    else{
+      res.json(songs)
+    }
+  }) */
+
+//Old reouter.get method to get songs and send them to the frontend - Neftali
+
+/* router.get('/songs', (req, res) => {
+  const songs = [
+    {title: "We Found Love",
             artist: "Rihanna",
             popularity: 10,
             releaseDate: new Date(2011, 9, 22),
-            genre: ["electro house"]
-        },
-        {
-            title: "Happy",
-            artist: "Pharell Williams",
-            popularity: 10,
-            releaseDate: new Date(2011, 9, 22),
-            genre: ["new soul", "soul"]
-        }/* ,
-        {
-            title: "Uptown Funk",
-            artist: "Bruno Mars",
-            popularity: 10,
-            releaseDate: new Date(2011, 9, 22),
-            genre: ["funk", "boogie"]
-        },
-        {
-            title: "Uptown Funk",
-            artist: "Bruno Mars",
-            popularity: 10,
-            releaseDate: new Date(2011, 9, 22),
-            genre: ["funk", "boogie"]
-        } */
-    ]
-    res.json(songs)
-})
-
-//all requests that usually use an an api star with api...so the url would be localhost:3000/api/songs
-app.use("/api", router)
-//start web server...app.listen(portnumber,function)
-app.listen(3000,function(){
-    console.log("Listening on port 3000")
-})
-//GET or a regular request when someone goes to http://localhost:3000/api/songs.  When using a function an a route, we almost always have a parameter or handle a response and request
-//http://localhost:3000/goodbye
-/* app.get("/hello", function(req,res){
-    res.send("<h1>Hello Express</h1>")
-})
-app.get("/goodbye", function(req, res) {
-    res.send("<h1>Goodbye, Express!</h1>");
- }); */
+            genre: ["electro house"]},
+    { title: 'Song 1', artist: 'Artist 1', genre: 'Pop' },
+    { title: 'Song 2', artist: 'Artist 2', genre: 'Rock' },
+  ];
+  res.json(songs);
+}); */

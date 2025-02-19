@@ -5,7 +5,7 @@ const path = require("path");
 // Create an Express app
 const app = express();
 
-// Enable CORS for cross-origin requests
+// Enable CORS for cross-origin reqruests
 app.use(cors());
 
 // Define the router for the '/api/songs' route
