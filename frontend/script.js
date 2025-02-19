@@ -1,6 +1,6 @@
 //we are gonna make an event listener...it will trigger when the DOM is loaded (aka upon visitng the webpage)
 addEventListener("DOMContentLoaded", async function() {
-    const response = await fetch("https://equinox-climbing-handbell.glitch.me/api/songs") //this is for glitch.com
+    const response = await fetch("https://equinox-backend.glitch.me/api/songs") //this is for glitch.com
     //const response = await fetch("http://localhost:3000/api/songs") //Make sure to use the complete url (aka including http://)
     const songs = await response.json()
     
