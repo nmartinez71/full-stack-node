@@ -49,32 +49,17 @@ router.post("/songs", async (req, res) =>{
   }
 })
 
+router.put("/:id", async(res, req) =>{
+  try{
+    const song = req.body
+    await Song.updateOne({_id: req.params.id},song)
+    console.log(song)
+    res.sendStatus(204)
+  }catch(err){
+    res.status(400).send(err)
+  }
+})
+
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 })
-
-//Old code -NM
-
-/* Song.find(query, function(err, songs){
-    if (err){
-      res.status(400).send(err)
-    }
-    else{
-      res.json(songs)
-    }
-  }) */
-
-//Old reouter.get method to get songs and send them to the frontend - Neftali
-
-/* router.get('/songs', (req, res) => {
-  const songs = [
-    {title: "We Found Love",
-            artist: "Rihanna",
-            popularity: 10,
-            releaseDate: new Date(2011, 9, 22),
-            genre: ["electro house"]},
-    { title: 'Song 1', artist: 'Artist 1', genre: 'Pop' },
-    { title: 'Song 2', artist: 'Artist 2', genre: 'Rock' },
-  ];
-  res.json(songs);
-}); */
